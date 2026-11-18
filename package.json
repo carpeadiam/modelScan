@@ -1,0 +1,12 @@
+{
+  "name": "pipelineguard",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:dashboard",
+    "test": "node --test ci-tests/*.test.cjs",
+    "build:dashboard": "npm --prefix dashboard run build",
+    "dev:dashboard": "npm --prefix dashboard run dev",
+    "dev:worker": "npm --prefix worker run dev"
+  },
+  "devDependencies": {}
+}

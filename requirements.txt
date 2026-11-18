@@ -1,6 +1,8 @@
-# Full development environment (Codespaces / local)
--r requirements-web.txt
-google-cloud-build==3.27.1
-PyYAML==6.0.2
-matplotlib==3.9.2
-pytest==8.3.3
+requests>=2.32,<3
+GitPython>=3.1,<4
+pandas>=2.2,<3
+numpy>=1.26,<3
+scikit-learn>=1.5,<2
+joblib>=1.4,<2
+python-dotenv>=1.0,<2
+pytest>=8,<9
