@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Model performance</h3>
+{% if not m %}{% set msg = "No evaluation exists yet (needs a trained model)." %}{% include "_empty.html" %}
+{% else %}
+{% if m.caution %}<div class="alert alert-danger">{{ m.caution }}</div>{% endif %}
+<p>Class distribution: success <strong>{{ m.dataset.class_distribution.success }}</strong> / failure <strong>{{ m.dataset.class_distribution.failure }}</strong> &middot; train {{ m.dataset.train_rows }} / test {{ m.dataset.test_rows }} (chronological) &middot; threshold {{ m.threshold }} &middot; selected: <code>{{ m.selected_model }}</code></p>
+{% set rows = {} %}
+<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Strategy</th><th>Acc</th><th>Prec</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>FPR</th><th>FNR</th><th>TN/FP/FN/TP</th></tr></thead><tbody>
+{% for group in [m.baselines, m.models] %}{% for name, x in group.items() %}<tr><td>{{ name }}</td>
+{% for k in ['accuracy','precision','recall','f1','roc_auc','false_positive_rate','false_negative_rate'] %}<td>{{ '%.3f' % x[k] if x[k] is not none else 'n/a' }}</td>{% endfor %}
+<td>{{ x.confusion_matrix.tn }}/{{ x.confusion_matrix.fp }}/{{ x.confusion_matrix.fn }}/{{ x.confusion_matrix.tp }}</td></tr>{% endfor %}{% endfor %}
+</tbody></table></div>{% endif %}{% endblock %}

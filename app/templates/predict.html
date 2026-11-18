@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Failure prediction</h3>
+<p class="text-secondary">Enter <strong>pre-build</strong> metrics only. Leave unknown fields blank (they are imputed by the model pipeline and listed as missing). Post-execution fields are not accepted.</p>
+{% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+<div class="row g-4"><div class="col-lg-7"><form method="post" class="card p-3"><div class="row g-3">
+{% for f in features %}<div class="col-md-6"><label class="form-label small">{{ help[f] }} <code>{{ f }}</code></label>
+<input class="form-control" name="{{ f }}" type="number" step="any" value="{{ values.get(f, '') }}"></div>{% endfor %}
+<div class="col-md-6"><label class="form-label small">Model</label><select name="model" class="form-select"><option value="">Selected model (default)</option><option value="logistic_regression">Logistic Regression</option><option value="random_forest">Random Forest</option></select></div>
+</div><button class="btn btn-primary mt-3">Predict</button></form></div>
+<div class="col-lg-5">{% if result %}<div class="card p-3">
+<div class="label">Failure probability</div><div class="metric">{{ '%.1f%%' % (result.failure_probability*100) }}</div>
+<div class="label mt-2">Risk</div><div class="metric risk-{{ result.risk_category }}">{{ result.risk_category }}</div>
+<div class="mt-2">Model: <code>{{ result.model_used }}</code></div><div class="small text-secondary">{{ result.prediction_timestamp }}</div>
+{% if result.warning %}<div class="alert alert-warning mt-3 small mb-0">{{ result.warning }}</div>{% endif %}
+{% if result.missing_features %}<div class="small mt-2">Missing (imputed): {{ result.missing_features|join(', ') }}</div>{% endif %}
+<details class="mt-2"><summary class="small">Features used</summary><pre class="small mb-0">{{ result.features_used|tojson(indent=2) }}</pre></details>
+</div>{% endif %}</div></div>{% endblock %}

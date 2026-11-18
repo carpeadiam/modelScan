@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Cloud Monitoring &amp; Logging</h3>
+<div class="card p-3 mb-3"><div class="label">Deployment</div>
+service: <code>{{ snap.deployment.service or 'n/a (not running on Cloud Run)' }}</code> &middot; revision: <code>{{ snap.deployment.revision or 'n/a' }}</code></div>
+{% if snap.reason %}<div class="alert alert-secondary">{{ snap.reason }}</div>{% endif %}
+{% for key, title, unit in [('request_count_hourly','Requests / hour',''),('latency_p95_ms_hourly','Latency p95 (ms) / hour',''),('memory_utilization_p95_hourly','Memory utilisation p95 / hour','')] %}
+{% if snap.get(key) %}<div class="card p-3 mb-3"><div class="label">{{ title }} (last 24h)</div><div class="table-responsive"><table class="table table-sm mb-0"><tbody>
+{% for ts, v in snap[key][-12:] %}<tr><td>{{ ts|int }}</td><td>{{ '%.3f' % v }}</td></tr>{% endfor %}</tbody></table></div></div>{% endif %}{% endfor %}
+{% if snap.recent_errors is defined %}<div class="card p-3"><div class="label">Recent errors (Cloud Logging)</div>
+{% if not snap.recent_errors %}<div class="text-secondary">No error-level entries found.</div>{% endif %}
+{% for e in snap.recent_errors %}<div class="small mt-1"><code>{{ e.time }}</code> {{ e.text }}</div>{% endfor %}</div>{% endif %}
+{% if snap.logging_reason %}<div class="alert alert-secondary mt-3">{{ snap.logging_reason }}</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+.env
+*.json.key
+*credentials*.json
+service-account*.json
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+workspace/*
+!workspace/.gitkeep
+storage/*
+!storage/.gitkeep
+dataset/*
+!dataset/.gitkeep
+reports/*
+!reports/.gitkeep

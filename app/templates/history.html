@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Pipeline history</h3>
+{% if not rows %}{% set msg = "No verified executions in the aggregated dataset." %}{% include "_empty.html" %}
+{% else %}<div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Execution ID</th><th>Timestamp</th><th>Commit</th><th>Status</th><th>Duration (s)</th><th>Failure type</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><code>{{ r.execution_id }}</code></td><td>{{ r.timestamp }}</td><td><code>{{ (r.commit_sha or '')[:10] }}</code></td>
+<td class="{{ 'risk-HIGH' if r.pipeline_status == 'failure' else 'risk-LOW' }}">{{ r.pipeline_status }}</td>
+<td>{{ '%.0f' % r.build_duration if r.build_duration is not none else 'n/a' }}</td><td>{{ r.failure_type }}</td></tr>{% endfor %}
+</tbody></table></div>{% endif %}{% endblock %}

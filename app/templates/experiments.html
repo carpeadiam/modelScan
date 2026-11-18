@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Experiment monitoring</h3>
+{% if not exps %}{% set msg = "No experiment progress found in storage." %}{% include "_empty.html" %}
+{% else %}<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Experiment</th><th>Requested</th><th>Completed</th><th>Successful</th><th>Failed</th><th style="width:20%">Progress</th><th>Updated</th></tr></thead><tbody>
+{% for e in exps %}<tr><td><code>{{ e.experiment_id }}</code></td><td>{{ e.requested }}</td><td>{{ e.completed }}</td><td>{{ e.successful }}</td><td>{{ e.failed }}</td>
+<td><div class="progress"><div class="progress-bar" style="width: {{ e.progress_pct }}%">{{ e.progress_pct }}%</div></div></td><td class="small">{{ e.updated_at }}</td></tr>{% endfor %}
+</tbody></table></div>{% endif %}{% endblock %}

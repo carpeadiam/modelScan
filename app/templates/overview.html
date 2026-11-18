@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<h3 class="mb-3">Overview</h3>
+{% if ov.empty %}{% set msg = "The dashboard only shows verified Google Cloud Build executions. Collect real executions first." %}{% include "_empty.html" %}
+{% else %}
+<div class="row g-3 mb-4">
+  {% for label, val in [('Verified executions', ov.total), ('Successful', ov.successful), ('Failed', ov.failed), ('Failure rate', '%.1f%%' % (ov.failure_rate*100)), ('Controlled failures', ov.controlled_failures), ('Natural failures', ov.natural_failures)] %}
+  <div class="col-6 col-md-4 col-lg-2"><div class="card p-3"><div class="label">{{ label }}</div><div class="metric">{{ val }}</div></div></div>
+  {% endfor %}
+</div>
+<div class="row g-3"><div class="col-md-6"><div class="card p-3"><div class="label mb-2">Outcome distribution</div><canvas id="c" height="160"></canvas></div></div>
+<div class="col-md-6"><div class="card p-3"><div class="label">Last execution</div>
+<div><code>{{ ov.last_execution.execution_id }}</code></div><div>{{ ov.last_execution.timestamp }}</div><div>Status: <strong>{{ ov.last_execution.status }}</strong></div></div></div></div>
+{% endif %}{% endblock %}
+{% block scripts %}{% if chart %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>new Chart(document.getElementById('c'),{type:'doughnut',data:{labels:{{ chart.labels|tojson }},datasets:[{data:{{ chart.counts|tojson }},backgroundColor:['#3fb950','#f85149'],borderColor:'#161b22'}]},options:{plugins:{legend:{labels:{color:'#e6edf3'}}}}});</script>
+{% endif %}{% endblock %}
